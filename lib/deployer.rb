@@ -1,6 +1,6 @@
 require "deployer/version"
-require 'deployer/helpers.rb'
-require 'deployer/railsless-deploy.rb'
+require 'deployer/helpers'
+require 'deployer/railsless-deploy'
 
 module Deployer
   # Your code goes here...
