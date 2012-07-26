@@ -64,7 +64,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc <<-DESC
       Update the cake repository to the latest version.
     DESC
-    task :pull do
+    task :update do
       stream "cd #{shared_path}/cakephp && git pull"
     end
 
@@ -148,6 +148,10 @@ Capistrano::Configuration.instance(:must_exist).load do
         tmp_dirs += cache_children.map { |d| File.join(cache_path, d) }
         run "#{try_sudo} mkdir -p #{(dirs + tmp_dirs).join(' ')}"
         run "#{try_sudo} chmod -R 777 #{tmp_path}" if (!user.empty?)
+
+        if shared_app_dirs
+          shared_app_dirs.each { | link | run "#{try_sudo} mkdir -p #{shared_path}/#{link}" }
+        end
       end
       
       desc <<-DESC
