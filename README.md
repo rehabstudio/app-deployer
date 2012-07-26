@@ -1,11 +1,13 @@
 # Deployer
 
-This gem allows you to deploy non rails sites easily and also has some useful tasks which you can use.
-It is used by rehabstudio for almost everything we do.
+This gem makes it easy to deploy non rails apps/sites, it also comes with some useful helper tasks for frameworks like lithium and cakephp.
+
+It is used by rehabstudio for almost every deployment we do.
 
 ## Installation
+**Please be aware that this gem is in active development and some features may not work as expected.**
 
-Currently as it's still in development we haven't pushed it to rubygems.org yet.
+If you find any issues/bugs please add them to the issue tracker, or even better, see the Contributing section at the bottom.
 
 ####Required Gems
 We need to ensure we have the following gems installed
@@ -79,12 +81,13 @@ To deploy your app you can now run
 or for multistage
 
     cap <stage> deploy
+  
 
-###Framework tasks
+##Framework tasks
 To use the extra tasks that are available for frameworks you need to include the file at the bottom of your deploy file.
 
 
-####CakePHP
+###CakePHP
 A lot of the tasks are based on the capcake gem but some have been modified slightly.
 To use the CakePHP tasks, add the following at the bottom of your deploy file:
     
@@ -92,25 +95,25 @@ To use the CakePHP tasks, add the following at the bottom of your deploy file:
 
 This will add in some hooks to the deployment process.
 
-#####Setup
+####Setup
 On initial setup of your site a DB config file will be generated for you. Just fill in the values at the prompt
 
 The tmp folders and any shared folders will also be setup. See Shared folders below for more info on these.
 
 
-#####After deploy hooks
+####After deploy hooks
 Each time you deploy, symlinks for the database file and any shared folders will be created for your app.
 
 The tmp cache will also be cleared.
 
-#####Changing the CakePHP repo and branch
+####Changing the CakePHP repo and branch
 Use these lines below to change your repo/branch
     
     set :cakephp_repo, "git://github.com/cakephp/cakephp.git"
     set :cake_branch,  "origin/2.2"
 
 
-#####Shared folders
+####Shared folders
 If you have an uploads folder that you want to preserve on each deploy you can declare them using:
 
     set :shared_app_dirs, ["webroot/uploads"]
@@ -118,18 +121,38 @@ If you have an uploads folder that you want to preserve on each deploy you can d
 Each time you deploy these folders will be symlinked to the current directory. 
 These folders will also be created on deploy:setup to save you creating them manually
 
-#####Older version support
+####Older version support
 If you are still using CakePHP 1.3 you will need to set the following in your deploy file.
     
     set: cakephp_version, 1.3 
+
+###Lithium
+First we need to include the lithium tasks in our deploy file
+
+    require 'deployer/framework/lithium/lithium'
     
-####EC2
+    
+###EC2
 If you use Amazon EC2, you can add this line to make capistrano use your pem file
 
     ssh_options[:keys] = ["#{ENV['HOME']}/.ssh/your-key.pem"]
     
 
+##Servers
+###Apache
+To use any of the apache tasks you need to include the file in your deploy script
 
+    require 'deployer/server/apache/apache'
+
+To put your server into maintenance mode run:
+
+    cap apache:maintenance:start
+
+To take it out of maintenance mode run:
+
+    cap apache:maintenance:end
+
+###Nginx
 
 ## Contributing
 
