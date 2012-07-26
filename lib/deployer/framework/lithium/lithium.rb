@@ -23,7 +23,6 @@ Capistrano::Configuration.instance(:must_exist).load do
   # =========================================================================
 
     after('deploy:setup', 'lithium:setup')
-    after('lithium:setup', 'lithium:shared:setup')
     after('deploy:create_symlink', 'lithium:create_symlink')
     after('deploy:finalize_update', 'lithium:cache:clear')
 
@@ -43,6 +42,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       transaction do
         run "cd #{shared_path}/libraries && git clone --depth 1 #{lithium_repo} lithium"
         checkout
+        shared.setup
       end
     end
 
@@ -57,7 +57,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc <<-DESC
     Update the lithium repository to the latest version.
     DESC
-    task :pull do
+    task :update do
       stream "cd #{shared_path}/libraries/lithium && git pull"
     end
 
@@ -103,13 +103,17 @@ Capistrano::Configuration.instance(:must_exist).load do
       task :setup, :roles => :web, :except => { :no_release => true } do
           on_rollback { run "rm -f #{database_path}; true" }
           puts "Connections setup"
-          prompt_with_default(:type, "database")
-          prompt_with_default(:adapter, "MySql")
+
+          prompt_with_default(:type, "database|MongoDb|http")
+          case :type
+            when 'database'
+              prompt_with_default(:login, user)
+              set :password, Capistrano::CLI.password_prompt("password:")
+              prompt_with_default(:encoding, 'UTF-8')
+          end
+
           prompt_with_default(:host, "127.0.0.1")
-          prompt_with_default(:login, user)
-          set :password, Capistrano::CLI.password_prompt("password:")
           prompt_with_default(:database, application)
-          prompt_with_default(:encoding, 'UTF-8')
 
           template = File.read(File.join(File.dirname(__FILE__), "templates", "connections.php.erb"))
           result = ERB.new(template).result(binding)
@@ -136,6 +140,10 @@ Capistrano::Configuration.instance(:must_exist).load do
         tmp_dirs = tmp_children.map { |d| File.join(tmp_path, d) }
         tmp_dirs += cache_children.map { |d| File.join(cache_path, d) }
         run "echo #{dirs} && #{try_sudo} mkdir -p #{(dirs + tmp_dirs).join(' ')} && #{try_sudo} chmod -R 777 #{tmp_path}" if (!user.empty?)
+
+        if shared_app_dirs
+          shared_app_dirs.each { | link | run "#{try_sudo} mkdir -p #{shared_path}/#{link}" }
+        end
       end
       
       desc <<-DESC
