@@ -25,7 +25,7 @@ We need to ensure we have the following gems installed
 
 When it is available from rubygems.org you will be able to install it yourself as:
 
-    $ gem install deployer
+    $ gem install app-deployer
 
 ## Usage
 
@@ -34,7 +34,7 @@ When it is available from rubygems.org you will be able to install it yourself a
 Open your application's Capfile and make it look like this:
 
     require 'rubygems'
-    require 'deployer'
+    require 'app-deployer'
     
 Open your config/deploy.rb file and add this:
 
@@ -91,7 +91,7 @@ To use the extra tasks that are available for frameworks you need to include the
 A lot of the tasks are based on the capcake gem but some have been modified slightly.
 To use the CakePHP tasks, add the following at the bottom of your deploy file:
     
-    require 'deployer/framework/cakephp/cakephp'
+    require 'app-deployer/framework/cakephp/cakephp'
 
 This will add in some hooks to the deployment process.
 
@@ -129,7 +129,7 @@ If you are still using CakePHP 1.3 you will need to set the following in your de
 ###Lithium
 First we need to include the lithium tasks in our deploy file
 
-    require 'deployer/framework/lithium/lithium'
+    require 'app-deployer/framework/lithium/lithium'
     
     
 ###EC2
@@ -142,7 +142,7 @@ If you use Amazon EC2, you can add this line to make capistrano use your pem fil
 ###Apache
 To use any of the apache tasks you need to include the file in your deploy script
 
-    require 'deployer/server/apache/apache'
+    require 'app-deployer/server/apache/apache'
 
 To put your server into maintenance mode run:
 
