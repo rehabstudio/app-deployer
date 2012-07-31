@@ -1,4 +1,4 @@
-# Deployer
+# App Deployer
 
 This gem makes it easy to deploy non rails apps/sites, it also comes with some useful helper tasks for frameworks like lithium and cakephp.
 
