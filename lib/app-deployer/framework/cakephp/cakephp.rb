@@ -13,7 +13,6 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset :tmp_children,    %w(cache logs sessions tests)
   _cset :cache_children,  %w(models persistent views)
   _cset :logs_files,      %w(debug error)
-  _cset(:database_path)   { File.join(File.join(shared_path, "config"), "database.php") }
   _cset(:tmp_path)        { File.join(shared_path, "tmp") }
   _cset(:cache_path)      { File.join(tmp_path, "cache") }
   _cset(:logs_path)       { File.join(tmp_path, "logs") }
@@ -24,6 +23,7 @@ Capistrano::Configuration.instance(:must_exist).load do
     _cset :shared_children,       %w(config tmp)
     _cset :database_partial_path, "config/database.php"
   end
+  set(:database_path)     { File.join(shared_path, database_partial_path) }
 
   # =========================================================================
   # Hooks
