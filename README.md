@@ -88,7 +88,7 @@ To use the extra tasks that are available for frameworks you need to include the
 
 
 ###CakePHP
-A lot of the tasks are based on the capcake gem but some have been modified slightly.
+A lot of the tasks are based on the capcake gem but some have been slightly modified.
 To use the CakePHP tasks, add the following at the bottom of your deploy file:
     
     require 'app-deployer/framework/cakephp/cakephp'
