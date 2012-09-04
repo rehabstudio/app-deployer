@@ -42,6 +42,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       transaction do
         run "cd #{shared_path}/libraries && git clone --depth 1 #{lithium_repo} lithium"
         checkout
+        connections.setup
         shared.setup
       end
     end

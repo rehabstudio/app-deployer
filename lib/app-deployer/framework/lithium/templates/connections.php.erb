@@ -37,7 +37,7 @@
  */
 use lithium\data\Connections;
 <% case type
-   when 'MySql' %>
+   when 'database' %>
 Connections::add('default', array(
     'type'     => 'database',
     'adapter'  => 'MySql',
@@ -46,7 +46,7 @@ Connections::add('default', array(
     'password' => '<%= password %>',
     'database' => '<%= database %>',
     'encoding' => '<%= encoding %>'
-));      
+));
 <% when 'http' %>
 Connections::add('default', array(
   'type'     => 'http',
