@@ -100,7 +100,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         run "#{try_sudo} find -P #{cache_path} -ignore_readdir_race -type f -name '*' -exec rm -f {} \\;"
       end
     end
-    
+
     # Database config
     namespace :database do
       desc <<-DESC
