@@ -50,7 +50,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         run "cd #{shared_path} && git clone --depth 1 #{cakephp_repo} cakephp"
         checkout
         shared.setup
-        database.config.setup
+        database.config
       end
     end
 
