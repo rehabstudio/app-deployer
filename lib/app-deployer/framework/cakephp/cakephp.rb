@@ -17,11 +17,11 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset(:cache_path)      { File.join(tmp_path, "cache") }
   _cset(:logs_path)       { File.join(tmp_path, "logs") }
   if cakephp_version >= 2
-    _cset :shared_children,       %w(Config tmp)
-    _cset :database_partial_path, "Config/database.php"
+    set :shared_children,       %w(Config tmp)
+    set :database_partial_path, "Config/database.php"
   else
-    _cset :shared_children,       %w(config tmp)
-    _cset :database_partial_path, "config/database.php"
+    set :shared_children,       %w(config tmp)
+    set :database_partial_path, "config/database.php"
   end
   set(:database_path)     { File.join(shared_path, database_partial_path) }
 
