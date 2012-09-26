@@ -124,6 +124,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       transaction do
         update_code
         create_symlink
+        cleanup
       end
     end
 
