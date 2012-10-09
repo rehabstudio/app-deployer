@@ -115,7 +115,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         prompt_with_default(:host, "localhost")
         prompt_with_default(:login, user)
         set :password, Capistrano::CLI.password_prompt("password:")
-        prompt_with_default(:database, application)
+        prompt_with_default(:database, "")
         prompt_with_default(:prefix, "")
         prompt_with_default(:encoding, 'utf8')
 
