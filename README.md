@@ -156,7 +156,9 @@ To take it out of maintenance mode run:
 To be completed
 
 ###PHP5-FPM
-You can automatically reload the php-fpm service after a deploy by including the task in your deploy file
+You can automatically reload the php-fpm service after a deploy by including the task at the bottom of your deploy file
+
+    require 'app-deployer/server/php-fpm'
 
 
 You should ensure the deploy user has the correct privileges to do this by adding a line to the sudoers file using visudo
