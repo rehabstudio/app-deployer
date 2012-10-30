@@ -153,6 +153,15 @@ To take it out of maintenance mode run:
     cap apache:maintenance:end
 
 ###Nginx
+To be completed
+
+###PHP5-FPM
+You can automatically reload the php-fpm service after a deploy by including the task in your deploy file
+
+
+You should ensure the deploy user has the correct privileges to do this by adding a line to the sudoers file using visudo
+
+    deploy ALL=(ALL) NOPASSWD: /usr/sbin/service php5-fpm reload
 
 ## Contributing
 
