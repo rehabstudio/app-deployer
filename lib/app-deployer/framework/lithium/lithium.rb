@@ -170,7 +170,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       desc <<-DESC
       Symlinks all shared files and folders
       DESC
-      task :symlink do
+      task :create_symlink do
         run "ln -s #{shared_path}/tmp #{latest_release}/tmp";
         if shared_app_dirs
           shared_app_dirs.each { | link | run "ln -nfs #{shared_path}/#{link} #{current_path}/#{link}" }

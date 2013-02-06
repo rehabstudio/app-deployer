@@ -11,6 +11,8 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.add_dependency 'capistrano', ">= 2.13.5"
+  gem.add_dependency 'colored', ">= 1.2.0"
   gem.name          = "app-deployer"
   gem.require_paths = ["lib"]
   gem.version       = App::Deployer::VERSION

@@ -1,14 +1,15 @@
+# encoding: utf-8
 Capistrano::Configuration.instance(:must_exist).load do
   # =========================================================================
   # These are helper methods that will be available to your recipes.
   # =========================================================================
-  
+
   def _cset(name, *args, &block)
     unless exists?(name)
       set(name, *args, &block)
     end
   end
-  
+
   # Asks the shell for a response or else uses the default if nothing
   # is entered
   def prompt_with_default(var, default, &block)
@@ -70,7 +71,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   # THUS, if you want to try to run something via sudo, and what to use the
   # root user, you'd just to try_sudo('something'). If you wanted to try_sudo as
   # someone else, you'd just do try_sudo('something', :as => "bob"). If you
-  # always wanted sudo to run as a particular user, you could do 
+  # always wanted sudo to run as a particular user, you could do
   # set(:admin_runner, "bob").
   def try_sudo(*args)
     options = args.last.is_a?(Hash) ? args.pop : {}
@@ -95,4 +96,47 @@ Capistrano::Configuration.instance(:must_exist).load do
     args << options.merge(:as => fetch(:runner, "app"))
     try_sudo(*args)
   end
+
+
+  def pretty_print(msg)
+    if logger.level == Capistrano::Logger::IMPORTANT
+      pretty_errors
+
+      msg = msg.slice(0, 57)
+      msg << '.' * (60 - msg.size)
+      print msg
+    else
+      puts msg.green
+    end
+  end
+
+  def puts_ok
+    if logger.level == Capistrano::Logger::IMPORTANT && !$error
+      puts '✔'.green
+    end
+
+    $error = false
+  end
+
+  def pretty_errors
+    if !$pretty_errors_defined
+      $pretty_errors_defined = true
+
+      class << $stderr
+        @@firstLine = true
+        alias _write write
+
+        def write(s)
+          if @@firstLine
+            s = '✘' << "\n" << s
+            @@firstLine = false
+          end
+
+          _write(s.red)
+          $error = true
+        end
+      end
+    end
+  end
+
 end

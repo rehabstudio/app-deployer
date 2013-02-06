@@ -83,6 +83,29 @@ Capistrano::Configuration.instance(:must_exist).load do
   # standalone case, or during deployment.
   _cset(:latest_release) { exists?(:deploy_timestamped) ? release_path : current_release }
 
+  STDOUT.sync
+  $error = false
+  $pretty_errors_defined = false
+
+  # Be less verbose by default
+  # logger.level = Capistrano::Logger::IMPORTANT
+
+  before "deploy:update_code" do
+    msg = "--> Updating code base with #{deploy_via} strategy"
+
+    if logger.level == Capistrano::Logger::IMPORTANT
+      pretty_errors
+      puts msg
+    else
+      puts msg.green
+    end
+  end
+
+  after "deploy:create_symlink" do
+    puts "--> Successfully deployed!".green
+  end
+
+
   # =========================================================================
   # These are the tasks that are available to help with deploying web apps,
   # and specifically, Rails applications. You can have cap give you a summary
