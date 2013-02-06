@@ -23,7 +23,14 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset(:deploy_to)             { "/var/www/#{application}" }
   _cset :keep_releases,         5
   _cset :git_enable_submodules, 1
+  _cset :use_composer,          false
+  _cset :composer_bin,          false
+  _cset :composer_options,      "--no-scripts --verbose --prefer-dist"
+  _cset :copy_vendors,          false
+  _cset :update_vendors,        false
+  _cset :clear_cache,           false
   _cset :use_sudo,              false
+  _cset :php_bin,               "php"
   default_run_options[:pty]   = true
   ssh_options[:forward_agent] = true
 

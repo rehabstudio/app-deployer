@@ -24,7 +24,27 @@ Capistrano::Configuration.instance(:must_exist).load do
 
     after('deploy:setup', 'lithium:setup')
     after('deploy:create_symlink', 'lithium:create_symlink')
-    after('deploy:finalize_update', 'lithium:cache:clear')
+
+    ["lithium:composer:install", "lithium:composer:update"].each do |action|
+      before action do
+        if copy_vendors
+          lithium.composer.copy_vendors
+        end
+      end
+    end
+
+    after "deploy:finalize_update" do
+      if use_composer
+        if update_vendors
+          lithium.composer.update
+        else
+          lithium.composer.install
+        end
+      end
+      if clear_cache
+        lithium.cache.clear
+      end
+    end
 
   # =========================================================================
   # Tasks
@@ -65,9 +85,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     desc <<-DESC
     This is a task that will get called from the deploy:create_symlink task
     It runs just before the release is symlinked to the current directory
-    
+
     You should use it to create symlinks to things like your database config \
-    and any shared directories or files that your app uses  
+    and any shared directories or files that your app uses
     DESC
     task :create_symlink do
       transaction do
@@ -75,7 +95,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         shared.create_symlink
       end
     end
-    
+
     # Framework specific tasks
 
     # Caching
@@ -121,7 +141,7 @@ Capistrano::Configuration.instance(:must_exist).load do
 
           put(result, "#{database_path}", :mode => 0644, :via => :scp)
       end
-  
+
       desc <<-DESC
       Symlinks the connections file.
       DESC
@@ -146,7 +166,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           shared_app_dirs.each { | link | run "#{try_sudo} mkdir -p #{shared_path}/#{link}" }
         end
       end
-      
+
       desc <<-DESC
       Symlinks all shared files and folders
       DESC
@@ -157,7 +177,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
       end
     end
-   
+
     # Logs
     namespace :log do
       desc <<-DESC
