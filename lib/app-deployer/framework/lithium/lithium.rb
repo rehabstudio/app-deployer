@@ -25,10 +25,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     after('deploy:setup', 'lithium:setup')
     after('deploy:create_symlink', 'lithium:create_symlink')
 
-    ["lithium:composer:install", "lithium:composer:update"].each do |action|
+    ["composer:install", "composer:update"].each do |action|
       before action do
         if copy_vendors
-          lithium.composer.copy_vendors
+          composer.copy_vendors
         end
       end
     end
@@ -36,9 +36,9 @@ Capistrano::Configuration.instance(:must_exist).load do
     after "deploy:finalize_update" do
       if use_composer
         if update_vendors
-          lithium.composer.update
+          composer.update
         else
-          lithium.composer.install
+          composer.install
         end
       end
       if clear_cache
@@ -171,7 +171,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       Symlinks all shared files and folders
       DESC
       task :create_symlink do
-        run "ln -s #{shared_path}/tmp #{latest_release}/tmp";
+        run "ln -s #{shared_path}/tmp #{latest_release}/resources/tmp";
         if shared_app_dirs
           shared_app_dirs.each { | link | run "ln -nfs #{shared_path}/#{link} #{current_path}/#{link}" }
         end
