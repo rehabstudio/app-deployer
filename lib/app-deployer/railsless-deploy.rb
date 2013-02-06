@@ -24,6 +24,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset :keep_releases,         5
   _cset :git_enable_submodules, 1
   _cset :use_composer,          false
+  _cset :use_compass,           false
   _cset :composer_bin,          false
   _cset :composer_options,      "--no-scripts --verbose --prefer-dist"
   _cset :copy_vendors,          false
@@ -98,6 +99,12 @@ Capistrano::Configuration.instance(:must_exist).load do
       puts msg
     else
       puts msg.green
+    end
+  end
+
+  after "deploy:update_code" do
+    if use_compass
+      compass.compile
     end
   end
 
