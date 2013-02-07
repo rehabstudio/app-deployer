@@ -26,7 +26,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset :use_composer,          false
   _cset :use_compass,           false
   _cset :composer_bin,          false
-  _cset :composer_options,      "--no-scripts --verbose --prefer-dist"
+  _cset :composer_options,      "--no-scripts --verbose"
   _cset :copy_vendors,          false
   _cset :update_vendors,        false
   _cset :clear_cache,           false
