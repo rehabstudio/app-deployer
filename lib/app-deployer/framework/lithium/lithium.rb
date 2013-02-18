@@ -13,7 +13,8 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset :tmp_children,    %w(cache logs tests)
   _cset :cache_children,  %w(templates)
   _cset :logs_files,      %w(debug error)
-  _cset(:database_path)   { File.join(File.join(shared_path, "config/bootstrap"), "connections.php") }
+  _cset(:database_folder) { File.join(shared_path, "config/bootstrap") }
+  _cset(:database_path)   { File.join("#{database_folder}", "connections.php") }
   _cset(:tmp_path)        { File.join(shared_path, "tmp") }
   _cset(:cache_path)      { File.join(tmp_path, "cache") }
   _cset(:logs_path)       { File.join(tmp_path, "logs") }
@@ -60,8 +61,10 @@ Capistrano::Configuration.instance(:must_exist).load do
     DESC
     task :setup do
       transaction do
-        run "cd #{shared_path}/libraries && git clone --depth 1 #{lithium_repo} lithium"
-        checkout
+        unless use_composer
+          run "cd #{shared_path}/libraries && git clone --depth 1 #{lithium_repo} lithium"
+          checkout
+        end
         connections.setup
         shared.setup
       end
@@ -126,7 +129,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           puts "Connections setup"
 
           prompt_with_default(:type, "database|MongoDb|http")
-          case :type
+          case type
             when 'database'
               prompt_with_default(:login, user)
               set :password, Capistrano::CLI.password_prompt("password:")
@@ -139,6 +142,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           template = File.read(File.join(File.dirname(__FILE__), "templates", "connections.php.erb"))
           result = ERB.new(template).result(binding)
 
+          run "#{try_sudo} mkdir -p #{database_folder}"
           put(result, "#{database_path}", :mode => 0644, :via => :scp)
       end
 
