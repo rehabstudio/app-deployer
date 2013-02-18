@@ -22,7 +22,7 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset :branch,                'master'
   _cset(:deploy_to)             { "/var/www/#{application}" }
   _cset :keep_releases,         5
-  _cset :git_enable_submodules, 1
+  _cset :git_enable_submodules, false
   _cset :use_composer,          false
   _cset :use_compass,           false
   _cset :composer_bin,          false
