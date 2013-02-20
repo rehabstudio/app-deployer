@@ -23,10 +23,11 @@ Capistrano::Configuration.instance(:must_exist).load do
   _cset(:deploy_to)             { "/var/www/#{application}" }
   _cset :keep_releases,         5
   _cset :git_enable_submodules, false
-  _cset :use_composer,          false
   _cset :use_compass,           false
+  _cset :use_composer,          false
   _cset :composer_bin,          false
   _cset :composer_options,      "--no-scripts --verbose"
+  _cset :curl_options,          "-k"
   _cset :copy_vendors,          false
   _cset :update_vendors,        false
   _cset :clear_cache,           false

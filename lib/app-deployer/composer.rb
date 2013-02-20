@@ -11,7 +11,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       if !remote_file_exists?("#{latest_release}/composer.phar")
         pretty_print "--> Downloading Composer"
 
-        run "#{try_sudo} sh -c 'cd #{latest_release} && curl -s http://getcomposer.org/installer | #{php_bin}'"
+        run "#{try_sudo} sh -c 'cd #{latest_release} && curl #{curl_options} -sS http://getcomposer.org/installer | #{php_bin}'"
       else
         pretty_print "--> Updating Composer"
 
