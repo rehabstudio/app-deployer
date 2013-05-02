@@ -31,7 +31,27 @@ Capistrano::Configuration.instance(:must_exist).load do
 
   after('deploy:setup',           'cakephp:setup')
   after('deploy:create_symlink',  'cakephp:create_symlink')
-  after('deploy:finalize_update', 'cakephp:cache:clear')
+
+  ["composer:install", "composer:update"].each do |action|
+    before action do
+      if copy_vendors
+        composer.copy_vendors
+      end
+    end
+  end
+
+  after "deploy:finalize_update" do
+    if use_composer
+      if update_vendors
+        composer.update
+      else
+        composer.install
+      end
+    end
+    if clear_cache
+      cakephp.cache.clear
+    end
+  end
 
   # =========================================================================
   # Tasks
@@ -81,9 +101,9 @@ Capistrano::Configuration.instance(:must_exist).load do
         shared.create_symlink
       end
     end
-    
+
     # Framework specific tasks
-    
+
     # Caching
     namespace :cache do
       desc <<-DESC
@@ -135,7 +155,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         run "#{try_sudo} ln -s #{database_path} #{current_path}/#{database_partial_path}"
       end
     end
-    
+
     # Shared directories and files
     namespace :shared do
       desc <<-DESC
@@ -153,7 +173,7 @@ Capistrano::Configuration.instance(:must_exist).load do
           shared_app_dirs.each { | link | run "#{try_sudo} mkdir -p #{shared_path}/#{link}" }
         end
       end
-      
+
       desc <<-DESC
         Symlinks all files and folders
       DESC
@@ -164,7 +184,7 @@ Capistrano::Configuration.instance(:must_exist).load do
         end
       end
     end
-   
+
     # Logs
     namespace :log do
       desc <<-DESC
