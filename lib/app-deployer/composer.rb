@@ -58,7 +58,7 @@ Capistrano::Configuration.instance(:must_exist).load do
       puts_ok
     end
 
-    task :copy_vendors, :except => { :no_release => true } do
+    task :copy_vendors, :roles => :app, :except => { :no_release => true } do
       pretty_print "--> Copying vendors from previous release"
 
       run "vendorDir=#{current_path}/libraries; if [ -d $vendorDir ] || [ -h $vendorDir ]; then cp -a $vendorDir #{latest_release}/libraries; fi;"
